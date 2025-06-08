@@ -1,14 +1,18 @@
-import { Routes, Route } from 'react-router-dom';
-import LandingPage from './pages/Landing';
-import Notfound from './pages/NotFound';
+import { Routes, Route } from "react-router-dom";
+import { NavigationInitializer } from "./wrappers/NavigationInitializer";
+import Signin from "./pages/Signin";
+import Signup from "./pages/Signup";
+import LandingPage from "./pages/Landing";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="*" element={<Notfound />} />
-
-    </Routes>
+      <NavigationInitializer>
+        <Routes>
+          <Route path="/" element={<LandingPage />}></Route>
+          <Route path="/signin" element={<Signin />} />
+          <Route path="/signup" element={<Signup />} />
+        </Routes>
+      </NavigationInitializer>
   );
 }
 
