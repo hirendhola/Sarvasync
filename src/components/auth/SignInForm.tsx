@@ -83,7 +83,7 @@ const SigninForm = () => {
               {/* Sign In Button */}
               <Button
                 onClick={handleSubmit}
-                className="w-full bg-gray-900 hover:bg-gray-800"
+                className="w-full bg-primary hover:bg-secondary-foreground/20 hover:text-primary"
               >
                 Sign in
               </Button>
