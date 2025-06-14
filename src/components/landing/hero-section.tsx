@@ -10,9 +10,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play, Sparkles } from "lucide-react";
 import { useRef, useEffect } from "react";
-import { navigationUtils } from "@/utils/navigate";
+import { useAuth } from "@/context/AuthContext";
 
 export function HeroSection() {
+  const { requestLogin } = useAuth();
+
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -204,7 +206,7 @@ export function HeroSection() {
             <Button
               size="lg"
               className="relative bg-primary hover:bg-primary/90 text-primary-foreground px-10 py-6 text-xl font-bold shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group rounded-2xl"
-              onClick={() => navigationUtils.goToSignUp()}
+              onClick={requestLogin}
             >
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/25 to-white/0"

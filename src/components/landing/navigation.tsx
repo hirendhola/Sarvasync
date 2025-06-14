@@ -9,9 +9,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
-import { navigationUtils } from "@/utils/navigate";
+import { useAuth } from "@/context/AuthContext";
 
 export function Navigation() {
+  const { requestLogin } = useAuth();
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { scrollY } = useScroll();
@@ -109,14 +111,14 @@ export function Navigation() {
             <Button
               variant={"link"}
               className="text-[12px]"
-              onClick={() => navigationUtils.goToSignIn()}
+              onClick={requestLogin}
             >
               already have account?
             </Button>
 
             <Button
               className="relative bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
-              onClick={() => navigationUtils.goToSignUp()}
+              onClick={requestLogin}
             >
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0"
