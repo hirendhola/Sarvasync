@@ -10,10 +10,10 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { navigationUtils } from "@/utils/navigate";
 
 export function Navigation() {
-  const { requestLogin } = useAuth();
-
+  const { requestLogin, isAuthenticated } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { scrollY } = useScroll();
@@ -102,44 +102,77 @@ export function Navigation() {
           </div>
 
           {/* CTA Button */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.6, duration: 0.6 }}
-            className="hidden md:block"
-          >
-            <Button
-              variant={"link"}
-              className="text-[12px]"
-              onClick={requestLogin}
+          {isAuthenticated ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+              className="hidden md:block"
             >
-              already have account?
-            </Button>
-
-            <Button
-              className="relative bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
-              onClick={requestLogin}
-            >
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0"
-                animate={{
-                  x: ["-100%", "100%"],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "linear",
-                }}
-              />
-              <motion.span
-                className="relative z-10"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <Button
+                className="relative bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
+                onClick={() => navigationUtils.goToDashboard()}
               >
-                Get Started Free
-              </motion.span>
-            </Button>
-          </motion.div>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0"
+                  animate={{
+                    x: ["-100%", "100%"],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: "linear",
+                  }}
+                />
+                <motion.span
+                  className="relative z-10"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Go To Dashboard
+                </motion.span>
+              </Button>
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+              className="hidden md:block"
+            >
+              <Button
+                variant={"link"}
+                className="text-[12px]"
+                onClick={requestLogin}
+              >
+                already have account?
+              </Button>
+
+              <Button
+                className="relative bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
+                onClick={requestLogin}
+              >
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0"
+                  animate={{
+                    x: ["-100%", "100%"],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: "linear",
+                  }}
+                />
+                <motion.span
+                  className="relative z-10"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Get Started Free
+                </motion.span>
+              </Button>
+            </motion.div>
+          )}
 
           {/* Mobile Menu Button */}
           <motion.button
