@@ -18,7 +18,7 @@ import {
   Linkedin,
   Youtube,
 } from "lucide-react";
-import api from "@/api";
+import connectGoogle from "@/utils/connect/google";
 // import { openOAuthPopup } from "@/utils/oauthPopup";
 
 interface AccountsTabProps {
@@ -61,44 +61,6 @@ export default function Dashboard({ onConnectAccount }: AccountsTabProps) {
     { name: "YouTube", icon: Youtube, color: "text-red-600" },
     { name: "TikTok", icon: Plus, color: "text-gray-600" },
   ];
-
-  async function connectGoogle() {
-    try {
-      // Call initiation endpoint to get authURL
-      const res = await api.post("/connect/google/initate"); // typo corrected to "/google/initiate"
-
-      if (res.data.authUrl) {
-        // Open Google Auth in a new tab
-        const authWindow = window.open(
-          res.data.authUrl,
-          "googleAuth",
-          "width=500,height=600"
-        );
-
-        return new Promise((resolve, reject) => {
-          window.addEventListener(
-            "message",
-            (event) => {
-              if (event.data?.type === "OAUTH_SUCCESS") {
-                resolve(true);
-                authWindow?.close();
-              } else if (event.data?.type === "OAUTH_ERROR") {
-                reject(new Error(event.data.payload.message));
-
-                authWindow?.close();
-              }
-            },
-            { once: true }
-          );
-        });
-      } else {
-        throw new Error("Auth URL not provided by server.");
-      }
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
 
   return (
     <div className="space-y-6 p-6">
