@@ -6,6 +6,7 @@ import {
   type DashboardTab,
 } from "@/components/dashboard/DashboardSidebar";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { OverviewTab } from "@/components/dashboard/tabs/OverviewTab";
 // import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 // import { OverviewTab } from "@/components/dashboard/tabs/OverviewTab";
 // import { ContentTab } from "@/components/dashboard/tabs/ContentTab";
@@ -24,8 +25,8 @@ export default function Dashboard() {
 
   const renderTabContent = () => {
     switch (activeTab) {
-      // case "overview":
-      //   return <OverviewTab onCreatePost={() => setCreatePostOpen(true)} />;
+      case "overview":
+        return <OverviewTab onCreatePost={() => setCreatePostOpen(true)} />;
       // case "content":
       //   return <ContentTab />;
       // case "schedule":
@@ -36,8 +37,8 @@ export default function Dashboard() {
         return <Accounts onConnectAccount={() => setAccountModalOpen(true)} />;
       // case "settings":
       //   return <SettingsTab />;
-      // default:
-      //   return <OverviewTab onCreatePost={() => setCreatePostOpen(true)} />;
+      default:
+        return <OverviewTab onCreatePost={() => setCreatePostOpen(true)} />;
     }
   };
 
