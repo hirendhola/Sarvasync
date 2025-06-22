@@ -1,231 +1,87 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import Accounts from "@/components/dashboard/tabs/Accounts";
+import { AnalyticsTab } from "@/components/dashboard/tabs/Analytics";
+import { useState } from "react";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  CheckCircle,
-  AlertCircle,
-  Instagram,
-  Twitter,
-  Facebook,
-  Linkedin,
-  Youtube,
-} from "lucide-react";
-import connectGoogle from "@/utils/connect/google";
-import api from "@/api";
+  DashboardSidebar,
+  type DashboardTab,
+} from "@/components/dashboard/DashboardSidebar";
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+// import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+// import { OverviewTab } from "@/components/dashboard/tabs/OverviewTab";
+// import { ContentTab } from "@/components/dashboard/tabs/ContentTab";
+// import { ScheduleTab } from "@/components/dashboard/tabs/ScheduleTab";
+// import { AnalyticsTab } from "@/components/dashboard/tabs/AnalyticsTab";
+// import { AccountsTab } from "@/components/dashboard/tabs/AccountsTab";
+// import { SettingsTab } from "@/components/dashboard/tabs/SettingsTab";
+// import { CreatePostModal } from "@/components/forms/CreatePostModal";
+// import { AccountConnectionModal } from "@/components/forms/AccountConnectionModal";
 
-interface ConnectedAccount {
-  id: string;
-  platform: string;
-  username: string;
-  followers: string;
-  status: "connected" | "error";
-  icon: React.ElementType;
-  color: string;
-}
+export default function Dashboard() {
+  const [activeTab, setActiveTab] = useState<DashboardTab>("overview");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [, setCreatePostOpen] = useState(false);
+  const [, setAccountModalOpen] = useState(false);
 
-const PLATFORM_DETAILS: { [key: string]: any } = {
-  GOOGLE: {
-    platformName: "YouTube",
-    icon: Youtube,
-    color: "text-red-600",
-    connectAction: connectGoogle, // Link the connect function here
-  },
-  FACEBOOK: {
-    platformName: "Facebook",
-    icon: Facebook,
-    color: "text-blue-600",
-    // connectAction: connectFacebook,
-  },
-  TWITTER: {
-    platformName: "Twitter",
-    icon: Twitter,
-    color: "text-blue-500",
-    // connectAction: connectTwitter,
-  },
-  INSTAGRAM: {
-    platformName: "Instagram",
-    icon: Instagram,
-    color: "text-pink-600",
-    // connectAction: connectInstagram,
-  },
-  LINKEDIN: {
-    platformName: "LinkedIn",
-    icon: Linkedin,
-    color: "text-blue-700",
-    // connectAction: connectLinkedIn,
-  },
-  // Add other platforms here as you support them
-  // TIKTOK: {
-  //   platformName: "TikTok",
-  //   icon: MessageCircle, // Example icon
-  //   color: "text-black",
-  // },
-};
-
-interface AccountsTabProps {
-  onConnectAccount: () => void;
-}
-
-export default function Dashboard({ onConnectAccount }: AccountsTabProps) {
-  const [connectedAccounts, setConnectedAccounts] = useState<ConnectedAccount[]>([]);
-  
-  useEffect(() => {
-    async function fetchConnectedAccounts() {
-      try {
-        const res = await api.get("/user/connected-accounts");
-        const linkedAccountsFromApi = res.data.user.linkedAccounts;
-        
-        const transformedAccounts = linkedAccountsFromApi
-          .map((account: any) => {
-            const details = PLATFORM_DETAILS[account.provider];
-            
-            // If the provider is unknown, skip it
-            if (!details) {
-              console.warn(`Unknown provider found: ${account.provider}`);
-              return null;
-            }
-
-            // Create the account object for the UI
-            return {
-              id: account.provider, // Use provider as a unique key
-              platform: details.platformName,
-              icon: details.icon,
-              color: details.color,
-              username: "Connected Account",
-              followers: "N/A",
-              status: "connected",
-            };
-          })
-          .filter(Boolean) as ConnectedAccount[]; 
-
-        setConnectedAccounts(transformedAccounts);
-      } catch (error) {
-        console.error("Failed to fetch connected accounts:", error);
-      }
+  const renderTabContent = () => {
+    switch (activeTab) {
+      // case "overview":
+      //   return <OverviewTab onCreatePost={() => setCreatePostOpen(true)} />;
+      // case "content":
+      //   return <ContentTab />;
+      // case "schedule":
+      //   return <ScheduleTab />;
+      case "analytics":
+        return <AnalyticsTab />;
+      case "accounts":
+        return <Accounts onConnectAccount={() => setAccountModalOpen(true)} />;
+      // case "settings":
+      //   return <SettingsTab />;
+      // default:
+      //   return <OverviewTab onCreatePost={() => setCreatePostOpen(true)} />;
     }
-    fetchConnectedAccounts();
-  }, []);
-
-  const connectedPlatformNames = connectedAccounts.map(acc => acc.platform);
-  const availablePlatforms = Object.values(PLATFORM_DETAILS)
-    .filter(details => !connectedPlatformNames.includes(details.platformName))
-    .map(details => ({
-        name: details.platformName,
-        icon: details.icon,
-        color: details.color,
-        action: details.connectAction || onConnectAccount,
-    }));
-
+  };
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">
-            Connected Accounts
-          </h1>
-          <p className="text-gray-600 mt-1">
-            Manage your social media accounts
-          </p>
-        </div>
+    <div className="min-h-screen bg-background flex w-full overflow-hidden">
+      <DashboardSidebar
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        isOpen={sidebarOpen}
+        onToggle={() => setSidebarOpen(!sidebarOpen)}
+      />
+
+      <div className="flex-1 flex flex-col min-h-screen w-full lg:ml-64 xl:ml-72">
+        <DashboardHeader
+          onMenuClick={() => setSidebarOpen(!sidebarOpen)}
+          onCreatePost={() => setCreatePostOpen(true)}
+        />
+
+        <main className="flex-1 overflow-auto bg-gradient-to-br from-background via-muted/30 to-background">
+          {/* Reduced padding layers and optimized for mobile to desktop */}
+          <div className="p-2 sm:p-3 md:p-4 lg:p-6 max-w-full">
+            <div className="bg-card/30 backdrop-blur-sm rounded-2xl  p-3 sm:p-2 md:p-3 lg:p-4 min-h-[calc(100vh-5rem)] sm:min-h-[calc(100vh-6rem)] md:min-h-[calc(100vh-7rem)] lg:min-h-[calc(100vh-8rem)] overflow-hidden">
+              {renderTabContent()}
+            </div>
+          </div>
+        </main>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {connectedAccounts.length > 0 ? (
-          connectedAccounts.map((account) => {
-            const IconComponent = account.icon;
-            return (
-              <Card
-                key={account.id}
-                className="hover:shadow-md transition-shadow"
-              >
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div
-                        className={`p-2 rounded-lg bg-gray-50 ${account.color}`}
-                      >
-                        <IconComponent className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-lg">
-                          {account.platform}
-                        </CardTitle>
-                        <CardDescription>{account.username}</CardDescription>
-                      </div>
-                    </div>
-                    <Badge
-                      variant={
-                        account.status === "connected" ? "default" : "destructive"
-                      }
-                    >
-                      {account.status === "connected" ? (
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                      ) : (
-                        <AlertCircle className="w-3 h-3 mr-1" />
-                      )}
-                      {account.status}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="text-sm text-gray-600">
-                      <span className="font-medium">{account.followers}</span>
-                      {account.followers !== "N/A" && " followers"}
-                    </div>
-                    <Button variant="outline" size="sm">
-                      Manage
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })
-        ) : (
-          <p className="text-gray-500 col-span-full">No accounts connected yet. Connect one below!</p>
-        )}
-      </div>
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-10 lg:hidden transition-all duration-300"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      {/* 
+      <CreatePostModal 
+        isOpen={createPostOpen} 
+        onClose={() => setCreatePostOpen(false)}
+      /> */}
 
-      <div className="mt-8">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">
-          Available Platforms
-        </h2>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {availablePlatforms.map((platform) => {
-            const IconComponent = platform.icon;
-            return (
-              <Card
-                key={platform.name}
-                className="hover:shadow-md transition-shadow cursor-pointer"
-                onClick={platform.action} // Use the specific action for each platform
-              >
-                <CardContent className="flex items-center justify-between p-6">
-                  <div className="flex items-center space-x-3">
-                    <div
-                      className={`p-2 rounded-lg bg-gray-50 ${platform.color}`}
-                    >
-                      <IconComponent className="w-6 h-6" />
-                    </div>
-                    <span className="font-medium">{platform.name}</span>
-                  </div>
-                  <Button variant="outline" size="sm">
-                    Connect
-                  </Button>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
+      {/* <AccountConnectionModal 
+        isOpen={accountModalOpen} 
+        onClose={() => setAccountModalOpen(false)}
+      /> */}
     </div>
   );
 }
