@@ -5,9 +5,16 @@ import { ChevronDownIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 function Accordion({
+  className,
   ...props
 }: React.ComponentProps<typeof AccordionPrimitive.Root>) {
-  return <AccordionPrimitive.Root data-slot="accordion" {...props} />
+  return (
+    <AccordionPrimitive.Root
+      data-slot="accordion"
+      className={cn("w-full space-y-3", className)}
+      {...props}
+    />
+  )
 }
 
 function AccordionItem({
@@ -17,7 +24,10 @@ function AccordionItem({
   return (
     <AccordionPrimitive.Item
       data-slot="accordion-item"
-      className={cn("border-b last:border-b-0", className)}
+      className={cn(
+        "group rounded-lg border bg-card shadow-xs transition-all duration-300 ease-in-out hover:bg-secondary/50 hover:shadow-md focus-within:border-primary/50 data-[state=open]:border-primary/30 data-[state=open]:bg-secondary/30",
+        className
+      )}
       {...props}
     />
   )
@@ -33,13 +43,15 @@ function AccordionTrigger({
       <AccordionPrimitive.Trigger
         data-slot="accordion-trigger"
         className={cn(
-          "focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180",
+          "flex w-full cursor-pointer items-center justify-between gap-4 px-6 py-4 text-left font-semibold text-card-foreground transition-colors duration-300 focus-visible:outline-none data-[state=open]:text-primary",
           className
         )}
         {...props}
       >
         {children}
-        <ChevronDownIcon className="text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200" />
+        <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-secondary transition-all duration-300 ease-in-out group-data-[state=open]:rotate-180 group-data-[state=open]:bg-primary">
+          <ChevronDownIcon className="h-4 w-4 text-secondary-foreground transition-colors duration-300 group-data-[state=open]:text-primary-foreground" />
+        </div>
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   )
@@ -56,7 +68,11 @@ function AccordionContent({
       className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm"
       {...props}
     >
-      <div className={cn("pt-0 pb-4", className)}>{children}</div>
+      <div
+        className={cn("px-6 pb-5 pt-1 leading-relaxed text-muted-foreground", className)}
+      >
+        {children}
+      </div>
     </AccordionPrimitive.Content>
   )
 }
