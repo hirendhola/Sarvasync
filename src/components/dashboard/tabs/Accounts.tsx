@@ -14,8 +14,14 @@ import { Loader } from "@/components/ui/loader";
 import React from "react";
 
 export default function Accounts() {
-  const { connectedAccounts, availablePlatforms, isLoading, error } = useApp();
-  
+  const {
+    connectedAccounts,
+    availablePlatforms,
+    isLoading,
+    error,
+    refreshAccounts,
+  } = useApp();
+
   if (isLoading) {
     return <Loader />;
   }
@@ -31,11 +37,18 @@ export default function Accounts() {
 
   return (
     <div className="space-y-8 p-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Connected Accounts</h1>
-        <p className="text-gray-600 mt-1">
-          Manage your social media accounts to power your content creation.
-        </p>
+      <div className="flex w-full justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Connected Accounts
+          </h1>
+          <p className="text-gray-600 mt-1">
+            Manage your social media accounts to power your content creation.
+          </p>
+        </div>
+        <Button size={"lg"} onClick={refreshAccounts}>
+          Refresh
+        </Button>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

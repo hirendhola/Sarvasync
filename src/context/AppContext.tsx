@@ -9,19 +9,13 @@ import React, {
   type ReactNode,
 } from "react";
 import api from "@/api";
-import { useAuth } from "./AuthContext"; 
-import {
-  Instagram,
-  Twitter,
-  Facebook,
-  Linkedin,
-  Youtube,
-} from "lucide-react";
-import connectGoogle from "@/utils/connect/google"; 
+import { useAuth } from "./AuthContext";
+import { Instagram, Twitter, Facebook, Linkedin, Youtube } from "lucide-react";
+import connectGoogle from "@/utils/connect/google";
 
 export interface ConnectedAccount {
-  id: string; 
-  platform: string; 
+  id: string;
+  platform: string;
   username: string;
   followers: string;
   status: "connected" | "error";
@@ -74,7 +68,7 @@ interface AppContextType {
   availablePlatforms: AvailablePlatform[];
   isLoading: boolean;
   error: string | null;
-  refreshAccounts: () => void; 
+  refreshAccounts: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -82,7 +76,9 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const { isAuthenticated } = useAuth(); // Depend on the authentication context
 
-  const [connectedAccounts, setConnectedAccounts] = useState<ConnectedAccount[]>([]);
+  const [connectedAccounts, setConnectedAccounts] = useState<
+    ConnectedAccount[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -105,8 +101,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             platform: details.platformName,
             icon: details.icon,
             color: details.color,
-            username: "Connected Account", 
-            followers: "N/A",
+            username: account.username,
+            followers: account.followerCount,
             status: "connected",
           };
         })
@@ -116,29 +112,29 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     } catch (err) {
       console.error("Failed to fetch connected accounts:", err);
       setError("Failed to load your accounts. Please try again later.");
-      setConnectedAccounts([]); 
+      setConnectedAccounts([]);
     } finally {
       setIsLoading(false);
     }
   }, []);
-
 
   useEffect(() => {
     if (isAuthenticated) {
       fetchConnectedAccounts();
     } else {
       setConnectedAccounts([]);
-      setIsLoading(false); 
+      setIsLoading(false);
       setError(null);
     }
   }, [isAuthenticated, fetchConnectedAccounts]);
 
-
   const availablePlatforms = useMemo<AvailablePlatform[]>(() => {
-    const connectedPlatformNames = connectedAccounts.map(acc => acc.platform);
+    const connectedPlatformNames = connectedAccounts.map((acc) => acc.platform);
     return Object.values(PLATFORM_DETAILS)
-      .filter(details => !connectedPlatformNames.includes(details.platformName))
-      .map(details => ({
+      .filter(
+        (details) => !connectedPlatformNames.includes(details.platformName)
+      )
+      .map((details) => ({
         name: details.platformName,
         icon: details.icon,
         color: details.color,
