@@ -80,7 +80,7 @@ export function DashboardSidebar({
               key={item.id}
               variant="ghost"
               className={cn(
-                "w-full justify-start gap-2 sm:gap-3 h-10 sm:h-11 rounded-lg transition-all duration-200 font-medium text-left text-sm sm:text-base",
+                "w-full justify-start gap-2 sm:gap-3 h-10 sm:h-11 rounded-lg transition-all duration-200 font-medium text-left text-sm sm:text-base cursor-pointer",
                 activeTab === item.id
                   ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md"
                   : "hover:bg-muted text-muted-foreground hover:text-foreground"

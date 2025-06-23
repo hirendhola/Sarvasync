@@ -21,12 +21,13 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<DashboardTab>("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [, setCreatePostOpen] = useState(false);
-  const [, setAccountModalOpen] = useState(false);
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "overview":
-        return <OverviewTab onCreatePost={() => setCreatePostOpen(true)} />;
+        // return <OverviewTab onCreatePost={() => setCreatePostOpen(true)} />;
+        return <Accounts />;
+
       // case "content":
       //   return <ContentTab />;
       // case "schedule":
@@ -34,7 +35,7 @@ export default function Dashboard() {
       case "analytics":
         return <AnalyticsTab />;
       case "accounts":
-        return <Accounts onConnectAccount={() => setAccountModalOpen(true)} />;
+        return <Accounts />;
       // case "settings":
       //   return <SettingsTab />;
       default:

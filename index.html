@@ -8,6 +8,47 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <title>SarvaSync</title>
+    <style>
+      /* Default Normal cursor */
+      html,
+      body {
+        cursor: url("./Normal.png"), default;
+      }
+
+      /* Pointer for clickable elements */
+      a,
+      button,
+      [role="button"],
+      .clickable {
+        cursor: url("./Link.cur"), pointer;
+      }
+
+      /* Text selection */
+      input,
+      textarea,
+      [contenteditable="true"] {
+        cursor: url("./Text.cur"), text;
+      }
+
+      /* Help cursor example */
+      .help {
+        cursor: url("./Help.cur"), help;
+      }
+
+      /* Move cursor example */
+      .move {
+        cursor: url("/Move.cur"), move;
+      }
+
+      /* Zoom-in and Zoom-out examples */
+      .zoom-in {
+        cursor: url("/Zoom-in.cur"), zoom-in;
+      }
+
+      .zoom-out {
+        cursor: url("/Zoom-out.cur"), zoom-out;
+      }
+    </style>
   </head>
   <body class="">
     <div id="root"></div>
